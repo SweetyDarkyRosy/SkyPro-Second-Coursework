@@ -9,6 +9,25 @@ export const ButtonAbstract = styled.button`
 	line-height: 24px;
 `;
 
+export const ButtonDefault = styled(ButtonAbstract)`
+	padding: 13px 37px;
+
+	min-height: 50px;
+
+	background-color: #009EE4;
+	border: none;
+
+	color: #FFFFFF;
+
+	&:hover {
+		background-color: #0080C1;
+	}
+
+	&:disabled {
+		background-color: #D9D9D9;
+	}
+`
+
 export const ButtonMinimal = styled(ButtonAbstract)`
 	padding: 8px 24px;
 

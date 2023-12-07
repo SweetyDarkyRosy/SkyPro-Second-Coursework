@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import { Centered } from "../styles/PageStyles"
+import SearchBar from "../components/SearchBar";
 
 
 export default function MainPage() {
@@ -7,8 +9,7 @@ export default function MainPage() {
 		});
 
 	return (
-		<React.Fragment>
-
-		</React.Fragment>
-		);
+		<Centered>
+			<SearchBar />
+		</Centered>);
 }
