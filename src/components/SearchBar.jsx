@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { ButtonDefault } from "./Button";
 import { InputDefault } from "./Input";
@@ -22,7 +23,9 @@ const SearchBarLogoImg = styled.img`
 export default function SearchBar() {
 	return (
 		<SearchBarBase>
-			<SearchBarLogoImg src="/img/skypro-logo-symbol.svg" style={ { marginRight: "60px" } }/>
+			<Link to="/">
+				<SearchBarLogoImg src="/img/skypro-logo-symbol.svg" style={ { marginRight: "60px" } }/>
+			</Link>
 			<InputDefault placeholder="Поиск по объявлениям" style={ { width: "100%" } }/>
 			<ButtonDefault style={ { marginLeft: "10px" } }>Найти</ButtonDefault>
 		</SearchBarBase>);

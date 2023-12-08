@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
-import { Centered } from "../styles/PageStyles"
+import { Centered, SectionDefault, SectionName } from "../styles/PageStyles"
 import SearchBar from "../components/SearchBar";
+import { AdvertisementList } from "../components/Advertisement"
 
 
 export default function MainPage() {
@@ -11,5 +12,9 @@ export default function MainPage() {
 	return (
 		<Centered>
 			<SearchBar />
+			<SectionDefault>
+				<SectionName>Объявления</SectionName>
+				<AdvertisementList/>
+			</SectionDefault>
 		</Centered>);
 }
