@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { ButtonMinimal } from "./Button";
+import { ButtonSecondary } from "./Button";
 import { useAuthContext } from "../authContext";
 
 
@@ -33,7 +33,7 @@ export function Header() {
 				{
 					(authContext.userData == null) &&
 					(
-						<ButtonMinimal>Вход в личный кабинет</ButtonMinimal>
+						<ButtonSecondary>Вход в личный кабинет</ButtonSecondary>
 					)
 				}
 
@@ -41,8 +41,8 @@ export function Header() {
 					(authContext.userData != null) &&
 					(
 						<React.Fragment>
-							<ButtonMinimal>Разместить объявление</ButtonMinimal>
-							<ButtonMinimal>Личный кабинет</ButtonMinimal>
+							<ButtonSecondary>Разместить объявление</ButtonSecondary>
+							<ButtonSecondary>Личный кабинет</ButtonSecondary>
 						</React.Fragment>
 					)
 				}

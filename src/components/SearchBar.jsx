@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { ButtonDefault } from "./Button";
+import { ButtonDefaultColoured } from "./Button";
 import { InputDefault } from "./Input";
 
 
@@ -27,6 +27,6 @@ export default function SearchBar() {
 				<SearchBarLogoImg src="/img/skypro-logo-symbol.svg" style={ { marginRight: "60px" } }/>
 			</Link>
 			<InputDefault placeholder="Поиск по объявлениям" style={ { width: "100%" } }/>
-			<ButtonDefault style={ { marginLeft: "10px" } }>Найти</ButtonDefault>
+			<ButtonDefaultColoured style={ { marginLeft: "10px" } }>Найти</ButtonDefaultColoured>
 		</SearchBarBase>);
 }

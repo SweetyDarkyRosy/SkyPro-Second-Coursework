@@ -11,7 +11,7 @@ export const ButtonAbstract = styled.button`
 	cursor: pointer;
 `;
 
-export const ButtonDefault = styled(ButtonAbstract)`
+export const ButtonDefaultColoured = styled(ButtonAbstract)`
 	padding: 13px 37px;
 
 	min-height: 50px;
@@ -30,7 +30,28 @@ export const ButtonDefault = styled(ButtonAbstract)`
 	}
 `
 
-export const ButtonMinimal = styled(ButtonAbstract)`
+export const ButtonDefaultTransparent = styled(ButtonAbstract)`
+	padding: 13px 37px;
+
+	min-height: 50px;
+
+	background-color: transparent;
+	border: solid 1px #D9D9D9;
+
+	color: #000000;
+
+	&:hover {
+		background-color: #009EE426;
+
+	}
+
+	&:disabled {
+		background-color: #D9D9D9;
+		border: solid 1px #000000;
+	}
+`
+
+export const ButtonSecondary = styled(ButtonAbstract)`
 	padding: 8px 24px;
 
 	min-height: 40px;

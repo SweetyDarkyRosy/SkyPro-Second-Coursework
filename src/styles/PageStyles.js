@@ -22,3 +22,24 @@ export const SectionName = styled.h2`
 	line-height: 88px;
 	text-align: left;
 `;
+
+export const CenteredViewBase = styled.div`
+	margin: 0 auto;
+	height: 100vh;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+`;
+
+export const DialogBase = styled.div`
+	padding: 43px 44px 47px 44px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+
+	background-color: #FFFFFF;
+	border-radius: 12px
+`;

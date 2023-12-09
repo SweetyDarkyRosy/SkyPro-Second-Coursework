@@ -20,3 +20,55 @@ export const InputDefault = styled.input`
 		outline: none;
 	}
 `;
+
+export const InputMinimal = styled.input`
+	padding: 8px 0;
+
+	width: 278.5px;
+
+	background-color: transparent;
+	border: ${ props => (props.isErrorMarked ? '2px solid #9E0000': 'none') };
+	border-bottom: ${ props => (props.isErrorMarked ? '': '1px solid #D0CECE') };;
+
+	color: #000000;
+	font-style: normal;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 24px;
+
+	&::-webkit-input-placeholder {
+		background-color: transparent;
+		color: #D0CECE;
+		font-style: normal;
+		font-weight: 400;
+		font-size: 16px;
+		line-height: 24px;
+	}
+
+	&:-ms-input-placeholder {
+		background-color: transparent;
+		color: #D0CECE;
+		font-style: normal;
+		font-weight: 400;
+		font-size: 16px;
+		line-height: 24px;
+	}
+
+	&:-moz-placeholder {
+		background-color: transparent;
+		color: #D0CECE;
+		font-style: normal;
+		font-weight: 400;
+		font-size: 16px;
+		line-height: 24px;
+	}
+
+	&::placeholder {
+		background-color: transparent;
+		color: #D0CECE;
+		font-style: normal;
+		font-weight: 400;
+		font-size: 16px;
+		line-height: 24px;
+	}
+`;
