@@ -33,7 +33,9 @@ export function Header() {
 				{
 					(authContext.userData == null) &&
 					(
-						<ButtonSecondary>Вход в личный кабинет</ButtonSecondary>
+						<Link to="/login">
+							<ButtonSecondary>Вход в личный кабинет</ButtonSecondary>
+						</Link>
 					)
 				}
 

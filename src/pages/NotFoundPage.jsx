@@ -29,6 +29,7 @@ export default function NotFoundPage() {
 	useEffect(() => {
 			document.body.style.backgroundColor = "#F0F0F0";
 		});
+		
 
 	return (
 		<CenteredViewBase>

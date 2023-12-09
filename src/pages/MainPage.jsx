@@ -9,6 +9,7 @@ export default function MainPage() {
 	useEffect(() => {
 			document.body.style.backgroundColor = "#FFFFFF";
 		});
+		
 
 	return (
 		<React.Fragment>
