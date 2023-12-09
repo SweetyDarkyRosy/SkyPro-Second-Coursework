@@ -65,7 +65,9 @@ export default function LoginPage() {
 				<InputMinimal placeholder="Пароль" type="password" style={ { marginTop: "30px" } } ref={ passwordInputRef }
 					onInput={ onPasswordInputInput } isErrorMarked={ isPasswordInputErrorMarked }/>
 				<ButtonDefaultColoured onClick={ onLoginClick } style={ { marginTop: "60px", width: "278px" } }>Войти</ButtonDefaultColoured>
-				<ButtonDefaultTransparent style={ { marginTop: "20px", width: "278px" } }>Зарегистрироваться</ButtonDefaultTransparent>
+				<Link to="/register" style={ { marginTop: "20px" } }>
+					<ButtonDefaultTransparent style={ { width: "278px" } }>Зарегистрироваться</ButtonDefaultTransparent>
+				</Link>
 			</DialogBase>
 		</CenteredViewBase>);
 }

@@ -42,7 +42,7 @@ export const ButtonDefaultTransparent = styled(ButtonAbstract)`
 
 	&:hover {
 		background-color: #009EE426;
-
+		border: solid 1px #009EE4;
 	}
 
 	&:disabled {

@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 
 
 export const AppRoutes = () => {
@@ -10,6 +11,7 @@ export const AppRoutes = () => {
 			<Route path="/" element={<MainPage />}/>
 
 			<Route path="/login" element={<LoginPage />}/>
+			<Route path="/register" element={<RegisterPage />}/>
 
 			<Route path="*" element={<NotFoundPage />}/>
 		</Routes>
