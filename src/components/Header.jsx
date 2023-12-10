@@ -58,6 +58,11 @@ export function Header() {
 		toggleAccoutMenuVisibility(!isAccoutMenuRolledOut);
 	};
 
+	const onLogOutClick = () => {
+		authContext.signOut();
+		toggleAccoutMenuVisibility(false);
+	};
+
 
 	return (
 		<HeaderBase>
@@ -85,8 +90,10 @@ export function Header() {
 					(isAccoutMenuRolledOut != false) && 
 						(
 							<AccoutMenu>
-								<ButtonSecondary style={ { width: "200px" } }>Профиль</ButtonSecondary>
-								<ButtonSecondary style={ { width: "200px" } }>Выйти</ButtonSecondary>
+								<Link to="/profile">
+									<ButtonSecondary style={ { width: "200px" } }>Профиль</ButtonSecondary>
+								</Link>
+								<ButtonSecondary onClick={ onLogOutClick } style={ { width: "200px" } }>Выйти</ButtonSecondary>
 							</AccoutMenu>)
 				}
 			</ButtonBlock>

@@ -23,6 +23,18 @@ export const SectionName = styled.h2`
 	text-align: left;
 `;
 
+export const SectionNameSmall = styled.h2`
+	margin-bottom: 20px;
+
+	width: 100%;
+
+	color: #000000;
+	font-weight: 500;
+	font-size: 32px;
+	line-height: 70.4px;
+	text-align: left;
+`;
+
 export const CenteredViewBase = styled.div`
 	margin: 0 auto;
 	height: 100vh;

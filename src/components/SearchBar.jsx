@@ -23,9 +23,7 @@ const SearchBarLogoImg = styled.img`
 export default function SearchBar() {
 	return (
 		<SearchBarBase>
-			<Link to="/">
-				<SearchBarLogoImg src="/img/skypro-logo-symbol.svg" style={ { marginRight: "60px" } }/>
-			</Link>
+			<SearchBarLogoImg src="/img/skypro-logo-symbol.svg" style={ { marginRight: "60px" } }/>
 			<InputDefault placeholder="Поиск по объявлениям" style={ { width: "100%" } }/>
 			<ButtonDefaultColoured style={ { marginLeft: "10px" } }>Найти</ButtonDefaultColoured>
 		</SearchBarBase>);
