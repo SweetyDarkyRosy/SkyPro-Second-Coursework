@@ -72,11 +72,11 @@ const AdvertisementSecondaryInfoText = styled.p`
 `;
 
 
-function Advertisement() {
+function Advertisement({ adId }) {
 	return (
 		<AdvertisementBase>
 			<AdvertisementPreviewImg src="/img.img"/>
-			<AdvertisementName>Наименование данного товара</AdvertisementName>
+			<AdvertisementName to={ '/ad/' + adId }>Наименование данного товара</AdvertisementName>
 			<AdvertisementPriceText>2 200 ₽</AdvertisementPriceText>
 			<AdvertisementSecondaryInfoBlock>
 				<AdvertisementSecondaryInfoText>Санкт-Петербург</AdvertisementSecondaryInfoText>
@@ -88,12 +88,12 @@ function Advertisement() {
 export function AdvertisementList() {
 	return (
 		<AdvertisementListBase>
-			<Advertisement/>
-			<Advertisement/>
-			<Advertisement/>
-			<Advertisement/>
-			<Advertisement/>
-			<Advertisement/>
-			<Advertisement/>
+			<Advertisement adId={ 1 }/>
+			<Advertisement adId={ 1 }/>
+			<Advertisement adId={ 1 }/>
+			<Advertisement adId={ 1 }/>
+			<Advertisement adId={ 1 }/>
+			<Advertisement adId={ 1 }/>
+			<Advertisement adId={ 1 }/>
 		</AdvertisementListBase>);
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { ButtonSecondary } from "./Button";
@@ -16,15 +16,47 @@ const HeaderBase = styled.div`
 const ButtonBlock = styled.div`
 	margin: 0 140px;
 
+	position: relative;
+
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-end;
 	gap: 10px;
 `
 
+const AccoutMenu = styled.div`
+	padding: 43px 44px 47px 44px;
+
+	position: absolute;
+	top: 70px;
+	right: 0;
+	z-index: 200;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	gap: 10px;
+
+	background-color: #009EE4;
+	border: solid 1px #FFFFFF;
+	border-radius: 6px;
+`
+
 
 export function Header() {
 	const authContext = useAuthContext();
+
+	const [ isAccoutMenuRolledOut, toggleAccoutMenuVisibility ] = useState(false);
+
+
+	const onPublishAdClick = () => {
+
+	};
+
+	const onRollOutAccoutMenuClick = () => {
+		toggleAccoutMenuVisibility(!isAccoutMenuRolledOut);
+	};
 
 
 	return (
@@ -43,10 +75,19 @@ export function Header() {
 					(authContext.userData != null) &&
 					(
 						<React.Fragment>
-							<ButtonSecondary>Разместить объявление</ButtonSecondary>
-							<ButtonSecondary>Личный кабинет</ButtonSecondary>
+							<ButtonSecondary onClick={ onPublishAdClick }>Разместить объявление</ButtonSecondary>
+							<ButtonSecondary onClick={ onRollOutAccoutMenuClick }>Личный кабинет</ButtonSecondary>
 						</React.Fragment>
 					)
+				}
+
+				{
+					(isAccoutMenuRolledOut != false) && 
+						(
+							<AccoutMenu>
+								<ButtonSecondary style={ { width: "200px" } }>Профиль</ButtonSecondary>
+								<ButtonSecondary style={ { width: "200px" } }>Выйти</ButtonSecondary>
+							</AccoutMenu>)
 				}
 			</ButtonBlock>
 		</HeaderBase>);
