@@ -45,7 +45,7 @@ export default function LoginPage() {
 		}
 
 		authContext.signIn(647, "User name");
-		navigate("/", { replace: true });
+		navigate("/profile", { replace: true });
 	};
 
 
