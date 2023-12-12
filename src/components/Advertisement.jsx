@@ -60,7 +60,7 @@ const AdvertisementSecondaryInfoBlock = styled.div`
 	flex-direction: column;
 	justify-content: center;
 	align-items: flex-start;
-	gap: 4px
+	gap: 4px;
 `;
 
 const AdvertisementSecondaryInfoText = styled.p`

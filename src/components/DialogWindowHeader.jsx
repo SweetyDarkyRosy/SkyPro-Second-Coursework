@@ -31,7 +31,7 @@ export default function DialogWindowHeader({ title, closeFunc }) {
 		<DialogWindowHeaderBase>
 			<DialogWindowHeadText>{ title }</DialogWindowHeadText>
 			<DialogWindowHeaderCloseButtonImage onClick={ closeFunc }>
-				<use xlinkHref="/img/close-button.svg#close-button"/>
+				<use xlinkHref="/img/cross.svg#cross"/>
 			</DialogWindowHeaderCloseButtonImage>
 		</DialogWindowHeaderBase>)
 }
