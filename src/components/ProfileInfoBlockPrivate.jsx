@@ -118,7 +118,7 @@ export default function ProfileInfoBlockPrivate() {
 			<SectionNameSmall>Настройки профиля</SectionNameSmall>
 			<ProfileDataBlock>
 				<ProfileAvatarBlock>
-					<ProfileAvatarImg src="/img/avatarPlaceholder.svg"/>
+					<ProfileAvatarImg src="/img/avatar-placeholder.svg"/>
 					<ProfileChangeAvatarActionText>Заменить</ProfileChangeAvatarActionText>
 				</ProfileAvatarBlock>
 				<ProfileBaseDataBlock>

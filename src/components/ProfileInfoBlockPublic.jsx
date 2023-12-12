@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import "@fontsource/noto-sans";
 import { ButtonDefaultColoured } from "./Button";
+import { useState } from "react";
+import { ForegroundBase, DialogWindowBase, DialogWindowSpecialText } from "../styles/ForegroundStyles";
+import DialogWindowHeader from "./DialogWindowHeader";
 
 
 const ProfileDataBlock = styled.div`
@@ -45,14 +48,37 @@ const ProfileBaseDataAddInfoText = styled.p`
 
 
 export default function ProfileInfoBlockPublic() {
+	const [ isWndWithPhoneVisible, toggleWndWithPhoneVisibility ] = useState(false);
+	
+	
+	const onShowPhone = () => {
+		toggleWndWithPhoneVisibility(true);
+	}
+
+	const onCloseDialogWindowClick = () => {
+		toggleWndWithPhoneVisibility(false);
+	}
+
+
 	return (
 		<ProfileDataBlock>
-			<ProfileAvatarImg src="/img/avatarPlaceholder.svg"/>
+			<ProfileAvatarImg src="/img/avatar-placeholder.svg"/>
 			<ProfileBaseDataBlock>
 				<ProfileBaseDataNameText>NAME</ProfileBaseDataNameText>
 				<ProfileBaseDataAddInfoText>CITY</ProfileBaseDataAddInfoText>
 				<ProfileBaseDataAddInfoText>DATE</ProfileBaseDataAddInfoText>
-				<ButtonDefaultColoured style={ { marginTop: "30px" } }>Показать телефон<br/>8 905 ХХХ ХХ ХХ</ButtonDefaultColoured>
+				<ButtonDefaultColoured onClick={ onShowPhone } style={ { marginTop: "30px" } }>Показать телефон<br/>8 905 ХХХ ХХ ХХ</ButtonDefaultColoured>
 			</ProfileBaseDataBlock>
+
+			{
+				(isWndWithPhoneVisible == true) &&
+					(
+						<ForegroundBase>
+							<DialogWindowBase>
+								<DialogWindowHeader title="Телефон продавца" closeFunc={ onCloseDialogWindowClick }/>
+								<DialogWindowSpecialText>8 905 ХХХ ХХ ХХ</DialogWindowSpecialText>
+							</DialogWindowBase>
+						</ForegroundBase>)
+			}
 		</ProfileDataBlock>)
 };

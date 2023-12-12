@@ -30,7 +30,7 @@ const AccoutMenu = styled.div`
 	position: absolute;
 	top: 70px;
 	right: 0;
-	z-index: 200;
+	z-index: 100;
 
 	display: flex;
 	flex-direction: column;

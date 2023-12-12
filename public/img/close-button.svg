@@ -1,0 +1,6 @@
+<svg>
+	<symbol id="close-button" viewBox="0 0 43 43" xmlns="http://www.w3.org/2000/svg">
+		<path d="M31.82 10.6066L10.6068 31.8198" stroke-width="2"/>
+		<path d="M31.82 31.8198L10.6068 10.6066" stroke-width="2"/>
+	</symbol>
+</svg>
