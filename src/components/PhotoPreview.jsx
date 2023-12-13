@@ -30,6 +30,12 @@ const PhotoPreviewDynamicInnerDiv = styled.div`
 	align-items: center;
 
 	background-color: #F0F0F0;
+
+	cursor: pointer;
+
+	&:hover {
+		stroke: #009EE4;
+	}
 `;
 
 const PhotoPreviewDynamicCrossImg = styled.svg`
@@ -39,16 +45,23 @@ const PhotoPreviewDynamicCrossImg = styled.svg`
 	rotate: 45deg;
 
 	stroke: #D9D9D9;
+`;
+
+const PhotoPreviewStaticInnerDiv = styled.div`
+	width: 100%;
+	height: 100%;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	background-color: #F0F0F0;
 
 	cursor: pointer;
-
-	&:hover {
-		stroke: #009EE4;
-	}
 `;
 
 
-export default function PhotoPreviewDynamic({ photoUrl }) {
+export function PhotoPreviewDynamic({ photoUrl }) {
 	return (
 		<PhotoPreviewBase>
 			{
@@ -62,6 +75,17 @@ export default function PhotoPreviewDynamic({ photoUrl }) {
 							</PhotoPreviewDynamicCrossImg>
 						</PhotoPreviewDynamicInnerDiv>
 					)
+			}
+		</PhotoPreviewBase>)
+}
+
+export function PhotoPreviewStatic({ photoUrl }) {
+	return (
+		<PhotoPreviewBase>
+			{
+				((photoUrl != undefined) && (photoUrl === "")) ?
+					<PhotoPreviewImg src="photoUrl"/> :
+					<PhotoPreviewStaticInnerDiv/>
 			}
 		</PhotoPreviewBase>)
 }

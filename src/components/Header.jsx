@@ -6,7 +6,7 @@ import { useAuthContext } from "../authContext";
 import { DialogWindowBase, DialogWindowRegularText, ForegroundBase } from "../styles/ForegroundStyles";
 import DialogWindowHeader from "./DialogWindowHeader";
 import { InputDefault, TextBoxDefault } from "./Input";
-import PhotoPreviewDynamic, { PhotoPreviewList } from "./PhotoPreview";
+import { PhotoPreviewDynamic, PhotoPreviewList } from "./PhotoPreview";
 
 
 const HeaderBase = styled.div`
