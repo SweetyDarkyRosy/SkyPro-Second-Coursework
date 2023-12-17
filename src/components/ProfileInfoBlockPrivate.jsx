@@ -5,6 +5,7 @@ import { ButtonDefaultColoured } from "./Button";
 import { SectionNameSmall } from "../styles/PageStyles";
 import { useAuthContext } from "../authContext";
 import { UpdateUserData } from "../api";
+import { useNotificationContext } from "../notificationContext";
 
 
 const ProfileDataBlock = styled.div`
@@ -95,6 +96,7 @@ const InputGroupLabel = styled.label`
 
 export default function ProfileInfoBlockPrivate() {
 	const authContext = useAuthContext();
+	const notificationContext = useNotificationContext();
 
 	const userNameInputRef = useRef(null);
 	const userSurnameInputRef = useRef(null);
@@ -117,12 +119,14 @@ export default function ProfileInfoBlockPrivate() {
 		if (userNameInputRef.current.value.length === 0)
 		{
 			setUserNameInputErrorMarkedState(true);
+			notificationContext.addNotificationError("Имя не было введено");
 			return;
 		}
 
 		if (phoneInputRef.current.value.length === 0)
 		{
 			setPhoneNumberInputErrorMarkedState(true);
+			notificationContext.addNotificationError("Номер телефона не был введён");
 			return;
 		}
 
@@ -130,11 +134,13 @@ export default function ProfileInfoBlockPrivate() {
 			phoneNumber: phoneInputRef.current.value, town: townInputRef.current.value }).then((result) => {
 					if (result.status === 201)
 					{
+						notificationContext.addNotification("Изменения были успешно сохранены");
+
 						authContext.setUserData(result.data.body);
 					}
 					else
 					{
-						console.error(result.data.error);
+						notificationContext.addNotificationError(result.data.error);
 					}
 				});
 	}

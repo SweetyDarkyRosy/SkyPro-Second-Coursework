@@ -6,6 +6,7 @@ import { ButtonDefaultColoured, ButtonDefaultTransparent } from "../components/B
 import { InputMinimal } from "../components/Input";
 import { useAuthContext } from "../authContext";
 import { LogIn } from "../api";
+import { useNotificationContext } from "../notificationContext";
 
 
 const LogoImg = styled.img`
@@ -17,6 +18,7 @@ const LogoImg = styled.img`
 export default function LoginPage() {
 	const navigate = useNavigate();
 	const authContext = useAuthContext();
+	const notificationContext = useNotificationContext();
 
 	const eMailInputRef = useRef(null);
 	const passwordInputRef = useRef(null);
@@ -36,12 +38,14 @@ export default function LoginPage() {
 		if (eMailInputRef.current.value.length === 0)
 		{
 			setEMailInputErrorMarkedState(true);
+			notificationContext.addNotificationError("E-Mail не был введён");
 			return;
 		}
 
 		if (passwordInputRef.current.value.length === 0)
 		{
 			setPasswordInputErrorMarkedState(true);
+			notificationContext.addNotificationError("Пароль не был введён");
 			return;
 		}
 
@@ -49,11 +53,14 @@ export default function LoginPage() {
 				if (result.status === 201)
 				{
 					authContext.setUserData(result.data.body);
+
+					notificationContext.addNotification("Вход в аккаунт был совершён успешно");
+
 					navigate("/profile", { replace: true });
 				}
 				else
 				{
-					console.error(result.data.error);
+					notificationContext.addNotificationError(result.data.error);
 				}
 			});
 	};

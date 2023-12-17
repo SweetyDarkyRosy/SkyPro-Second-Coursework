@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ButtonDefaultColoured } from "../components/Button";
 import { InputMinimal } from "../components/Input";
 import { registerNewUser } from "../api";
+import { useNotificationContext } from "../notificationContext";
 
 
 const LogoImg = styled.img`
@@ -15,6 +16,7 @@ const LogoImg = styled.img`
 
 export default function RegisterPage() {
 	const navigate = useNavigate();
+	const notificationContext = useNotificationContext();
 
 	const eMailInputRef = useRef(null);
 	const passwordInputRef = useRef(null);
@@ -54,18 +56,21 @@ export default function RegisterPage() {
 		if (eMailInputRef.current.value.length === 0)
 		{
 			setEMailInputErrorMarkedState(true);
+			notificationContext.addNotificationError("E-Mail не был введён");
 			return;
 		}
 
 		if (passwordInputRef.current.value.length === 0)
 		{
 			setPasswordInputErrorMarkedState(true);
+			notificationContext.addNotificationError("Пароль не был введён");
 			return;
 		}
 
 		if (repeatedPasswordInputRef.current.value.length === 0)
 		{
 			setRepeatedPasswordInputErrorMarkedState(true);
+			notificationContext.addNotificationError("Пароль не был введён повторно");
 			return;
 		}
 
@@ -74,18 +79,22 @@ export default function RegisterPage() {
 			setPasswordInputErrorMarkedState(true);
 			setRepeatedPasswordInputErrorMarkedState(true);
 
+			notificationContext.addNotificationError("Пароли не совпадают");
+
 			return;
 		}
 
 		if (userNameInputRef.current.value.length === 0)
 		{
 			setUserNameInputErrorMarkedState(true);
+			notificationContext.addNotificationError("Имя не было введено");
 			return;
 		}
 
 		if (phoneNumberInputRef.current.value.length === 0)
 		{
 			setPhoneNumberInputErrorMarkedState(true);
+			notificationContext.addNotificationError("Номер телефона не был введён");
 			return;
 		}
 
@@ -94,11 +103,13 @@ export default function RegisterPage() {
 			phoneNumber: phoneNumberInputRef.current.value, town: townInputRef.current.value }).then((result) => {
 					if (result.status === 201)
 					{
+						notificationContext.addNotification("Новый аккаунт был создан");
+						
 						navigate("/login", { replace: true });
 					}
 					else
 					{
-						console.error(result.data.error);
+						notificationContext.addNotificationError(result.data.error);
 					}
 				});
 	};

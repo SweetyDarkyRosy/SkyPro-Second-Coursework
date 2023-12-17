@@ -101,7 +101,7 @@ const logIn = async (request, response) => {
 		const foundUser = await User.findOne({ eMail: request.body.eMail, password: request.body.password });
 		if (!foundUser)
 		{
-			response.status(402).json({ status: 'Пользователь не найден' });
+			response.status(402).json({ error: 'Пользователь не найден' });
 		}
 		else
 		{
@@ -128,7 +128,7 @@ const updateUserInfo = async (request, response) => {
 		const foundUser = await User.findById(id);
 		if (!foundUser)
 		{
-			return response.status(402).json({ status: 'Пользователь с данным ID не был найден' });
+			return response.status(402).json({ error: 'Пользователь с данным ID не был найден' });
 		}
 
 		if (request.body.name.length < 1)
