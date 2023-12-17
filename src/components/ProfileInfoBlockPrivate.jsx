@@ -1,8 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { InputDefault } from "./Input";
 import { ButtonDefaultColoured } from "./Button";
 import { SectionNameSmall } from "../styles/PageStyles";
+import { useAuthContext } from "../authContext";
+import { UpdateUserData } from "../api";
 
 
 const ProfileDataBlock = styled.div`
@@ -92,16 +94,23 @@ const InputGroupLabel = styled.label`
 
 
 export default function ProfileInfoBlockPrivate() {
+	const authContext = useAuthContext();
+
 	const userNameInputRef = useRef(null);
 	const userSurnameInputRef = useRef(null);
 	const townInputRef = useRef(null);
 	const phoneInputRef = useRef(null);
 
 	const [ isUserNameInputErrorMarked, setUserNameInputErrorMarkedState ] = useState(false);
+	const [ isPhoneNumberInputErrorMarked, setPhoneNumberInputErrorMarkedState ] = useState(false);
 
 
 	const onUserNameInputInput = () => {
 		setUserNameInputErrorMarkedState(false);
+	}
+	
+	const onUserPhoneNumberInputInput = () => {
+		setPhoneNumberInputErrorMarkedState(false);
 	}
 
 	const onSaveUserDataClick = () => {
@@ -110,7 +119,40 @@ export default function ProfileInfoBlockPrivate() {
 			setUserNameInputErrorMarkedState(true);
 			return;
 		}
+
+		if (phoneInputRef.current.value.length === 0)
+		{
+			setPhoneNumberInputErrorMarkedState(true);
+			return;
+		}
+
+		UpdateUserData({ id: authContext.userData.id, name: userNameInputRef.current.value, surname: userSurnameInputRef.current.value,
+			phoneNumber: phoneInputRef.current.value, town: townInputRef.current.value }).then((result) => {
+					if (result.status === 201)
+					{
+						authContext.setUserData(result.data.body);
+					}
+					else
+					{
+						console.error(result.data.error);
+					}
+				});
 	}
+
+	const updateInputs = () => {
+		userNameInputRef.current.value = authContext.userData.name;
+		userSurnameInputRef.current.value = authContext.userData.surname;
+		townInputRef.current.value = authContext.userData.town;
+		phoneInputRef.current.value = authContext.userData.phoneNumber;
+	}
+
+	useEffect(() => {
+			updateInputs();
+		}, [authContext.userData]);
+
+	useEffect(() => {
+			updateInputs();
+		}, []);
 
 
 	return (
@@ -138,7 +180,8 @@ export default function ProfileInfoBlockPrivate() {
 						</InputGroup>
 						<InputGroup style={ { gridColumn: "span 2", gridRow: "row 3;" } }>
 							<InputGroupLabel>Телефон</InputGroupLabel>
-							<InputDefault ref={ phoneInputRef } style={ { width: "100%" } }/>
+							<InputDefault onInput={ onUserPhoneNumberInputInput } ref={ phoneInputRef } style={ { width: "100%" } }
+								isErrorMarked={ isPhoneNumberInputErrorMarked }/>
 						</InputGroup>
 					</ProfileBaseDataGrid>
 					<ButtonDefaultColoured onClick={ onSaveUserDataClick }>Сохранить</ButtonDefaultColoured>

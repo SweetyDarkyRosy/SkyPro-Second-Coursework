@@ -2,8 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { CenteredViewBase, DialogBase } from "../styles/PageStyles";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import { ButtonDefaultColoured, ButtonDefaultTransparent } from "../components/Button";
+import { ButtonDefaultColoured } from "../components/Button";
 import { InputMinimal } from "../components/Input";
+import { registerNewUser } from "../api";
 
 
 const LogoImg = styled.img`
@@ -19,6 +20,7 @@ export default function RegisterPage() {
 	const passwordInputRef = useRef(null);
 	const repeatedPasswordInputRef = useRef(null);
 	const userNameInputRef = useRef(null);
+	const phoneNumberInputRef = useRef(null);
 	const userSurnameInputRef = useRef(null);
 	const townInputRef = useRef(null);
 
@@ -26,6 +28,7 @@ export default function RegisterPage() {
 	const [ isPasswordInputErrorMarked, setPasswordInputErrorMarkedState ] = useState(false);
 	const [ isRepeatedPasswordInputErrorMarked, setRepeatedPasswordInputErrorMarkedState ] = useState(false);
 	const [ isUserNameInputErrorMarked, setUserNameInputErrorMarkedState ] = useState(false);
+	const [ isPhoneNumberInputErrorMarked, setPhoneNumberInputErrorMarkedState ] = useState(false);
 
 	const onEMailInputInput = () => {
 		setEMailInputErrorMarkedState(false);
@@ -43,7 +46,11 @@ export default function RegisterPage() {
 		setUserNameInputErrorMarkedState(false);
 	}
 
-	const onLoginClick = () => {
+	const onPhoneNumberInputInput = () => {
+		setPhoneNumberInputErrorMarkedState(false);
+	}
+
+	const onRegisterClick = () => {
 		if (eMailInputRef.current.value.length === 0)
 		{
 			setEMailInputErrorMarkedState(true);
@@ -76,7 +83,24 @@ export default function RegisterPage() {
 			return;
 		}
 
-		navigate("/login", { replace: true });
+		if (phoneNumberInputRef.current.value.length === 0)
+		{
+			setPhoneNumberInputErrorMarkedState(true);
+			return;
+		}
+
+		registerNewUser({ eMail: eMailInputRef.current.value, password: passwordInputRef.current.value,
+			name: userNameInputRef.current.value, surname: userSurnameInputRef.current.value,
+			phoneNumber: phoneNumberInputRef.current.value, town: townInputRef.current.value }).then((result) => {
+					if (result.status === 201)
+					{
+						navigate("/login", { replace: true });
+					}
+					else
+					{
+						console.error(result.data.error);
+					}
+				});
 	};
 
 
@@ -100,8 +124,10 @@ export default function RegisterPage() {
 				<InputMinimal placeholder="Имя" style={ { marginTop: "30px" } } ref={ userNameInputRef }
 					onInput={ onUserNameInputInput } isErrorMarked={ isUserNameInputErrorMarked }/>
 				<InputMinimal placeholder="Фамилия (необязательно)" style={ { marginTop: "30px" } } ref={ userSurnameInputRef }/>
+				<InputMinimal placeholder="Телефон" style={ { marginTop: "30px" } } ref={ phoneNumberInputRef }
+					onInput={ onPhoneNumberInputInput } isErrorMarked={ isPhoneNumberInputErrorMarked }/>
 				<InputMinimal placeholder="Город (необязательно)" style={ { marginTop: "30px" } } ref={ townInputRef }/>
-				<ButtonDefaultColoured onClick={ onLoginClick } style={ { marginTop: "60px", width: "278px" } }>Зарегистрироваться</ButtonDefaultColoured>
+				<ButtonDefaultColoured onClick={ onRegisterClick } style={ { marginTop: "60px", width: "278px" } }>Зарегистрироваться</ButtonDefaultColoured>
 			</DialogBase>
 		</CenteredViewBase>);
 }

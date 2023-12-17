@@ -10,14 +10,14 @@ export const InputDefault = styled.input`
 	box-sizing: border-box;
 
 	border-radius: 6px;
-	border: solid 1px #00000033;
+	border: ${ props => (props.isErrorMarked ? 'solid 1px #9E0000': 'solid 1px #00000033') };
 
 	font-weight: 400;
 	font-size: 16px;
 	line-height: 24px;
 
 	&:focus {
-		border: solid 1px #009EE4;
+		border: ${ props => (props.isErrorMarked ? 'solid 1px #9E0000': 'solid 1px #009EE4') };
 		outline: none;
 	}
 `;
@@ -29,7 +29,7 @@ export const InputMinimal = styled.input`
 
 	background-color: transparent;
 	border: ${ props => (props.isErrorMarked ? '2px solid #9E0000': 'none') };
-	border-bottom: ${ props => (props.isErrorMarked ? '': '1px solid #D0CECE') };;
+	border-bottom: ${ props => (props.isErrorMarked ? '': '1px solid #D0CECE') };
 
 	color: #000000;
 	font-style: normal;

@@ -13,8 +13,8 @@ export const AuthProvider = (props) => {
 	const [user, setUser] = useState(null);
 
 
-	const signIn = (userKey, name) => {
-		setUser({ userKey, name });
+	const setUserData = (userData) => {
+		setUser(userData);
 	}
 
 	const signOut = () => {
@@ -23,7 +23,7 @@ export const AuthProvider = (props) => {
 
 
 	return (
-		<AuthContext.Provider value={ { userData: user, signIn, signOut } }>
+		<AuthContext.Provider value={ { userData: user, setUserData, signOut } }>
 			{ props.children }
 		</AuthContext.Provider>);
 }

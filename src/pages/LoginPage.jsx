@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ButtonDefaultColoured, ButtonDefaultTransparent } from "../components/Button";
 import { InputMinimal } from "../components/Input";
 import { useAuthContext } from "../authContext";
+import { LogIn } from "../api";
 
 
 const LogoImg = styled.img`
@@ -44,8 +45,17 @@ export default function LoginPage() {
 			return;
 		}
 
-		authContext.signIn(647, "User name");
-		navigate("/profile", { replace: true });
+		LogIn({ eMail: eMailInputRef.current.value, password: passwordInputRef.current.value }).then((result) => {
+				if (result.status === 201)
+				{
+					authContext.setUserData(result.data.body);
+					navigate("/profile", { replace: true });
+				}
+				else
+				{
+					console.error(result.data.error);
+				}
+			});
 	};
 
 

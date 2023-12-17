@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ButtonDefaultColoured, ButtonSecondary } from "./Button";
 import { useAuthContext } from "../authContext";
 import { DialogWindowBase, DialogWindowRegularText, ForegroundBase } from "../styles/ForegroundStyles";
@@ -105,6 +105,7 @@ const PriceInputSymbol = styled.p`
 
 
 export function Header() {
+	const navigate = useNavigate();
 	const authContext = useAuthContext();
 
 	const [ isAccoutMenuRolledOut, toggleAccoutMenuVisibility ] = useState(false);
@@ -128,7 +129,7 @@ export function Header() {
 
 	const onLogOutClick = () => {
 		authContext.signOut();
-		toggleAccoutMenuVisibility(false);
+		navigate("/", { replace: true });
 	};
 
 
