@@ -55,13 +55,11 @@ export const NotificationProvider = (props) => {
 			{
 				clearInterval(updateNotificationArrayIntervalID);
 				updateNotificationArrayIntervalID = null;
-				console.log("STOPPED");
 			}
 			else
 			{
 				if (updateNotificationArrayIntervalID == null)
 				{
-					console.log("START!");
 					updateNotificationArrayIntervalID = setInterval(removeOldestNotification, 2000);
 				}
 			}

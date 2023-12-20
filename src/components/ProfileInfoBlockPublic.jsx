@@ -1,9 +1,12 @@
 import styled from "styled-components";
 import "@fontsource/noto-sans";
-import { ButtonDefaultColoured } from "./Button";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ForegroundBase, DialogWindowBase, DialogWindowSpecialText } from "../styles/ForegroundStyles";
 import DialogWindowHeader from "./DialogWindowHeader";
+import { getUserData } from "../api";
+import { ButtonDefaultColoured } from "./Button";
+import { useNotificationContext } from "../notificationContext";
+import Skeleton from "react-loading-skeleton";
 
 
 const ProfileDataBlock = styled.div`
@@ -47,7 +50,12 @@ const ProfileBaseDataAddInfoText = styled.p`
 `;
 
 
-export default function ProfileInfoBlockPublic() {
+export default function ProfileInfoBlockPublic({ userId }) {
+	const notificationContext = useNotificationContext();
+
+	const [ userData, setUserData ] = useState(false);
+	const [ authorAccountCreationDateAndTime, setAuthorAccountCreationDateAndTime ] = useState("");
+
 	const [ isWndWithPhoneVisible, toggleWndWithPhoneVisibility ] = useState(false);
 	
 	
@@ -59,15 +67,62 @@ export default function ProfileInfoBlockPublic() {
 		toggleWndWithPhoneVisibility(false);
 	}
 
+	const formatAuthorDateAndTime = () => {
+		const months = [ 'января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября',
+			'октября', 'ноября', 'декабря' ];
+
+		const createdTimeAndDate = new Date(userData.created);
+
+		let dateAndTimeText = 'Продаёт товары с ';
+		dateAndTimeText += months[createdTimeAndDate.getMonth()];
+		dateAndTimeText += ' ';
+		dateAndTimeText += createdTimeAndDate.getFullYear();
+
+		setAuthorAccountCreationDateAndTime(dateAndTimeText);
+	}
+
+	useEffect(() => {
+			getUserData({ id: userId }).then((result) => {
+					if (result.status === 200)
+					{
+						setUserData(result.data);
+					}
+					else
+					{
+						notificationContext.addNotificationError(result.data.error);
+					}
+				})
+		}, [])
+
+	useEffect(() => {
+			if (userData != null)
+			{
+				formatAuthorDateAndTime();
+			}
+		}, [userData])
+
 
 	return (
 		<ProfileDataBlock>
 			<ProfileAvatarImg src="/img/avatar-placeholder.svg"/>
 			<ProfileBaseDataBlock>
-				<ProfileBaseDataNameText>NAME</ProfileBaseDataNameText>
-				<ProfileBaseDataAddInfoText>CITY</ProfileBaseDataAddInfoText>
-				<ProfileBaseDataAddInfoText>DATE</ProfileBaseDataAddInfoText>
-				<ButtonDefaultColoured onClick={ onShowPhone } style={ { marginTop: "30px" } }>Показать телефон<br/>8 905 ХХХ ХХ ХХ</ButtonDefaultColoured>
+				{
+					(userData == null) ?
+						(
+							<React.Fragment>
+								<Skeleton variant="rectangular" width={ "100px" } height={ "30px" }/>
+								<Skeleton variant="rectangular" width={ "100px" } height={ "30px" }/>
+								<Skeleton variant="rectangular" width={ "100px" } height={ "30px" }/>
+							</React.Fragment>) :
+						(
+							<React.Fragment>
+								<ProfileBaseDataNameText>{ userData.name }{ (userData.surname != "") && (" " + userData.surname)}</ProfileBaseDataNameText>
+								<ProfileBaseDataAddInfoText>{ userData.town }</ProfileBaseDataAddInfoText>
+								<ProfileBaseDataAddInfoText>{ authorAccountCreationDateAndTime }</ProfileBaseDataAddInfoText>
+							</React.Fragment>)
+				}
+				<ButtonDefaultColoured onClick={ onShowPhone } style={ { marginTop: "30px" } }>Показать телефон<br/>
+					{ String(userData.phoneNumber).replace(/(?<=\S{5})\S/g, "X") }</ButtonDefaultColoured>
 			</ProfileBaseDataBlock>
 
 			{
@@ -76,7 +131,7 @@ export default function ProfileInfoBlockPublic() {
 						<ForegroundBase>
 							<DialogWindowBase>
 								<DialogWindowHeader title="Телефон продавца" closeFunc={ onCloseDialogWindowClick }/>
-								<DialogWindowSpecialText>8 905 ХХХ ХХ ХХ</DialogWindowSpecialText>
+								<DialogWindowSpecialText>{ userData.phoneNumber }</DialogWindowSpecialText>
 							</DialogWindowBase>
 						</ForegroundBase>)
 			}

@@ -48,6 +48,18 @@ export default function RegisterPage() {
 		setUserNameInputErrorMarkedState(false);
 	}
 
+	const onPhoneNumberInputKeyDown = (event) => {
+		if ((isNaN(event.key) === true) && (event.key !== "+") && (event.key !== "Backspace"))
+		{
+			event.preventDefault();
+		}
+
+		if ((event.key === "+") && (event.target.value.length !== 0))
+		{
+			event.preventDefault();
+		}
+	}
+
 	const onPhoneNumberInputInput = () => {
 		setPhoneNumberInputErrorMarkedState(false);
 	}
@@ -135,7 +147,7 @@ export default function RegisterPage() {
 				<InputMinimal placeholder="Имя" style={ { marginTop: "30px" } } ref={ userNameInputRef }
 					onInput={ onUserNameInputInput } isErrorMarked={ isUserNameInputErrorMarked }/>
 				<InputMinimal placeholder="Фамилия (необязательно)" style={ { marginTop: "30px" } } ref={ userSurnameInputRef }/>
-				<InputMinimal placeholder="Телефон" style={ { marginTop: "30px" } } ref={ phoneNumberInputRef }
+				<InputMinimal placeholder="Телефон" style={ { marginTop: "30px" } } ref={ phoneNumberInputRef } onKeyDown={ onPhoneNumberInputKeyDown }
 					onInput={ onPhoneNumberInputInput } isErrorMarked={ isPhoneNumberInputErrorMarked }/>
 				<InputMinimal placeholder="Город (необязательно)" style={ { marginTop: "30px" } } ref={ townInputRef }/>
 				<ButtonDefaultColoured onClick={ onRegisterClick } style={ { marginTop: "60px", width: "278px" } }>Зарегистрироваться</ButtonDefaultColoured>

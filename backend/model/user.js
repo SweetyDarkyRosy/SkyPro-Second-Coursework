@@ -18,25 +18,29 @@ const UserSchema = new mongoose.Schema({
 		required: true
 	},
 
+	surname: {
+		type: String
+	},
+
+
 	phoneNumber: {
 		type: String,
 		required: true
-	},
-
-	surname: {
-		type: String
 	},
 
 	town: {
 		type: String
 	},
 
-	/*
+	created: {
+		type: Date,
+		required: true
+	},
+
 	ads: [{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Advertisement'
-	 }]
-	*/
+	}]
 });
 
 const User = mongoose.model('User', UserSchema);

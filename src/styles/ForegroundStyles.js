@@ -20,8 +20,12 @@ export const ForegroundBase = styled.div`
 export const DialogWindowBase = styled.div`
 	padding: 20px 50px 56px 50px;
 
+	max-height: 90vh;
+
 	background-color: #FFFFFF;
-	border-radius: 12px
+	border-radius: 12px;
+
+	overflow-y: auto;
 `
 
 export const DialogWindowHeadText = styled.h2`

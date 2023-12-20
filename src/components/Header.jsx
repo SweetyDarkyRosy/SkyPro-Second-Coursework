@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { ButtonDefaultColoured, ButtonSecondary } from "./Button";
@@ -7,6 +7,8 @@ import { DialogWindowBase, DialogWindowRegularText, ForegroundBase } from "../st
 import DialogWindowHeader from "./DialogWindowHeader";
 import { InputDefault, TextBoxDefault } from "./Input";
 import { PhotoPreviewDynamic, PhotoPreviewList } from "./PhotoPreview";
+import { useNotificationContext } from "../notificationContext";
+import { addNewAd } from "../api";
 
 
 const HeaderBase = styled.div`
@@ -76,10 +78,10 @@ const PriceInputSpan = styled.span`
 	box-sizing: border-box;
 
 	border-radius: 6px;
-	border: solid 1px #00000033;
+	border: ${ props => (props.isErrorMarked ? 'solid 1px #9E0000': 'solid 1px #00000033') };
 
 	&:focus-within {
-		border: solid 1px #009EE4;
+		border: ${ props => (props.isErrorMarked ? 'solid 1px #9E0000': 'solid 1px #009EE4') };
 	}
 `;
 
@@ -107,21 +109,18 @@ const PriceInputSymbol = styled.p`
 export function Header() {
 	const navigate = useNavigate();
 	const authContext = useAuthContext();
+	const notificationContext = useNotificationContext();
 
 	const [ isAccoutMenuRolledOut, toggleAccoutMenuVisibility ] = useState(false);
 	const [ isAddAdDialogWndVisible, toggleAddAdDialogWndVisibility ] = useState(false);
 
+	const adTitleInputRef = useRef(null);
+	const adDescriptionInputRef = useRef(null);
+	const adPriceInputRef = useRef(null);
 
-	const onShowAddAdDialogWindowClick = () => {
-		toggleAddAdDialogWndVisibility(true);
-	};
+	const [ isAdTitleInputErrorMarked, setAdTitleInputErrorMarkedState ] = useState(false);
+	const [ isAdPriceInputErrorMarked, setAdPriceInputErrorMarkedState ] = useState(false);
 
-	const onCloseAddAdDialogWindowClick = () => {
-		toggleAddAdDialogWndVisibility(false);
-	};
-
-	const onPublishAdClick = () => {
-	};
 
 	const onRollOutAccoutMenuClick = () => {
 		toggleAccoutMenuVisibility(!isAccoutMenuRolledOut);
@@ -131,6 +130,68 @@ export function Header() {
 		authContext.signOut();
 		navigate("/", { replace: true });
 	};
+
+	const onShowAddAdDialogWindowClick = () => {
+		toggleAddAdDialogWndVisibility(true);
+	};
+
+	const onCloseAddAdDialogWindowClick = () => {
+		toggleAddAdDialogWndVisibility(false);
+
+		setAdTitleInputErrorMarkedState(false);
+		setAdPriceInputErrorMarkedState(false);
+	};
+
+	const onAdTitleInputInput = () => {
+		setAdTitleInputErrorMarkedState(false);
+	}
+
+	const onAdPriceInputKeyDown = (event) => {
+		if ((isNaN(event.key) === true) && (event.key !== "Backspace"))
+		{
+			event.preventDefault();
+		}
+	}
+
+	const onAdPriceInputInput = () => {
+		setAdPriceInputErrorMarkedState(false);
+	}
+
+	const onPublishAdClick = () => {
+		if (adTitleInputRef.current.value.length === 0)
+		{
+			setAdTitleInputErrorMarkedState(true);
+			notificationContext.addNotificationError("Заголовок не был введён");
+			return;
+		}
+
+		if (adPriceInputRef.current.value.length === 0)
+		{
+			setAdPriceInputErrorMarkedState(true);
+			notificationContext.addNotificationError("Цена не была введена");
+			return;
+		}
+
+		addNewAd({ userId: authContext.userData.id, title: adTitleInputRef.current.value, description: adDescriptionInputRef.current.value,
+			price: adPriceInputRef.current.value }).then((result) => {
+					if (result.status === 201)
+					{
+						notificationContext.addNotification("Объявление было добавлено");
+						onCloseAddAdDialogWindowClick();
+					}
+					else
+					{
+						notificationContext.addNotificationError(result.data.error);
+					}
+				});
+	};
+
+	useEffect(() => {
+			if (isAddAdDialogWndVisible === true)
+			{
+				adPriceInputRef.current.value = 0;
+			}
+		}, [isAddAdDialogWndVisible]);
 
 
 	return (
@@ -176,9 +237,10 @@ export function Header() {
 							<DialogWindowBase>
 								<DialogWindowHeader title="Новое объявление" closeFunc={ onCloseAddAdDialogWindowClick }/>
 								<DialogWindowRegularText style={ { marginTop: "10px" } }>Название</DialogWindowRegularText>
-								<InputDefault placeholder="Введите название" style={ { marginTop: "4px", width: "500px" } }/>
+								<InputDefault placeholder="Введите название" style={ { marginTop: "4px", width: "500px" } } ref={ adTitleInputRef }
+									onInput={ onAdTitleInputInput } isErrorMarked={ isAdTitleInputErrorMarked }/>
 								<DialogWindowRegularText style={ { marginTop: "20px" } }>Описание</DialogWindowRegularText>
-								<TextBoxDefault placeholder="Введите описание" style={ { marginTop: "4px", width: "500px", height: "200px" } }/>
+								<TextBoxDefault placeholder="Введите описание" style={ { marginTop: "4px", width: "500px", height: "200px" } } ref={ adDescriptionInputRef }/>
 								
 								<PhotoBlockHeaderSpan style={ { marginTop: "20px" } }>
 									<DialogWindowRegularText>Фотографии товара</DialogWindowRegularText>
@@ -193,11 +255,11 @@ export function Header() {
 								</PhotoPreviewList>
 								
 								<DialogWindowRegularText style={ { marginTop: "30px" } }>Цена</DialogWindowRegularText>
-								<PriceInputSpan style={ { marginTop: "4px", width: "200px" } }>
-									<PriceInputCustomInput/>
+								<PriceInputSpan style={ { marginTop: "4px", width: "200px" } } isErrorMarked={ isAdPriceInputErrorMarked }>
+									<PriceInputCustomInput ref={ adPriceInputRef } onKeyDown={ onAdPriceInputKeyDown } onInput={ onAdPriceInputInput }/>
 									<PriceInputSymbol>₽</PriceInputSymbol>
 								</PriceInputSpan>
-								<ButtonDefaultColoured style={ { marginTop: "30px" } }>Опубликовать</ButtonDefaultColoured>
+								<ButtonDefaultColoured onClick={ onPublishAdClick } style={ { marginTop: "30px" } }>Опубликовать</ButtonDefaultColoured>
 							</DialogWindowBase>
 						</ForegroundBase>)
 			}

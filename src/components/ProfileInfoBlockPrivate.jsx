@@ -4,7 +4,7 @@ import { InputDefault } from "./Input";
 import { ButtonDefaultColoured } from "./Button";
 import { SectionNameSmall } from "../styles/PageStyles";
 import { useAuthContext } from "../authContext";
-import { UpdateUserData } from "../api";
+import { updateUserData } from "../api";
 import { useNotificationContext } from "../notificationContext";
 
 
@@ -110,6 +110,18 @@ export default function ProfileInfoBlockPrivate() {
 	const onUserNameInputInput = () => {
 		setUserNameInputErrorMarkedState(false);
 	}
+
+	const onPhoneNumberInputKeyDown = (event) => {
+		if ((isNaN(event.key) === true) && (event.key !== "+") && (event.key !== "Backspace"))
+		{
+			event.preventDefault();
+		}
+
+		if ((event.key === "+") && (event.target.value.length !== 0))
+		{
+			event.preventDefault();
+		}
+	}
 	
 	const onUserPhoneNumberInputInput = () => {
 		setPhoneNumberInputErrorMarkedState(false);
@@ -130,7 +142,7 @@ export default function ProfileInfoBlockPrivate() {
 			return;
 		}
 
-		UpdateUserData({ id: authContext.userData.id, name: userNameInputRef.current.value, surname: userSurnameInputRef.current.value,
+		updateUserData({ id: authContext.userData.id, name: userNameInputRef.current.value, surname: userSurnameInputRef.current.value,
 			phoneNumber: phoneInputRef.current.value, town: townInputRef.current.value }).then((result) => {
 					if (result.status === 201)
 					{
@@ -186,7 +198,7 @@ export default function ProfileInfoBlockPrivate() {
 						</InputGroup>
 						<InputGroup style={ { gridColumn: "span 2", gridRow: "row 3;" } }>
 							<InputGroupLabel>Телефон</InputGroupLabel>
-							<InputDefault onInput={ onUserPhoneNumberInputInput } ref={ phoneInputRef } style={ { width: "100%" } }
+							<InputDefault onKeyDown={ onPhoneNumberInputKeyDown } onInput={ onUserPhoneNumberInputInput } ref={ phoneInputRef } style={ { width: "100%" } }
 								isErrorMarked={ isPhoneNumberInputErrorMarked }/>
 						</InputGroup>
 					</ProfileBaseDataGrid>

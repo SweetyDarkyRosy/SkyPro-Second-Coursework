@@ -1,5 +1,6 @@
 const Joi = require("joi");
 const User = require("../model/user");
+const Advertisement = require("../model/advertisement");
 
 
 const addUserBody = Joi.object({
@@ -69,8 +70,10 @@ const addUser = async (request, response) => {
 			}
 		}
 
-		const user = new User({ eMail: newUserEMail, password: newUserPassword, name: newUserName, phoneNumber: newUserPhoneNumber,
-			surname: newUserSurname, town: newUserTown });
+		const creationDateAndTime = new Date();
+
+		const user = new User({ eMail: newUserEMail, password: newUserPassword, name: newUserName, surname: newUserSurname,
+			phoneNumber: newUserPhoneNumber, town: newUserTown, created: creationDateAndTime, ads: [] });
 
 		await user.save().then(() => {
 				response.status(201).json({ result: "Новый аккаунт был создан" });
@@ -113,6 +116,21 @@ const logIn = async (request, response) => {
 					town: foundUser.town
 				}});
 		}
+	}
+	catch(error)
+	{
+		response.status(500).json({ error: error.message });
+	}
+}
+
+const getUserInfo = async (request, response) => {
+	try
+	{
+		const { id } = request.params;
+
+		await User.findById(id).then((result) => {
+				response.status(200).json(result);
+			});
 	}
 	catch(error)
 	{
@@ -174,7 +192,7 @@ const updateUserInfo = async (request, response) => {
 		}
 		
 		await foundUser.save().then(() => {
-				response.status(201).json({ status: 'Пользователь найден', body: {
+				response.status(201).json({ status: 'Данные пользователя были обновлены', body: {
 						id: foundUser._id.toString(),
 						name: foundUser.name,
 						surname: foundUser.surname,
@@ -189,9 +207,33 @@ const updateUserInfo = async (request, response) => {
 	}
 }
 
+const getAdsOfUser = async (request, response) => {
+	try
+	{
+		const { id } = request.params;
+
+		const foundUser = await User.findById(id);
+		if (!foundUser)
+		{
+			return response.status(402).json({ error: 'Пользователь не найден' });
+		}
+
+		await Advertisement.find({ author: foundUser }).then((result) => {
+				response.status(200);
+				response.json(result);
+			});
+	}
+	catch(error)
+	{
+		response.status(500).json({ error: error.message });
+	}
+}
+
 
 module.exports = {
 	logIn,
 	addUser,
-	updateUserInfo
+	getUserInfo,
+	updateUserInfo,
+	getAdsOfUser
 };

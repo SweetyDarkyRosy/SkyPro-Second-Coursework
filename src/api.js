@@ -1,4 +1,6 @@
 const userDataAPIAddr = "http://127.0.0.1:3005/users/";
+const adDataAPIAddr = "http://127.0.0.1:3005/ads/";
+const commentDataAPIAddr = "http://127.0.0.1:3005/comments/";
 
 
 export async function registerNewUser({ eMail, password, name, surname, phoneNumber, town }) {
@@ -27,7 +29,7 @@ export async function registerNewUser({ eMail, password, name, surname, phoneNum
 	return result;
 }
 
-export async function LogIn({ eMail, password }) {
+export async function logIn({ eMail, password }) {
 	const response = await fetch(userDataAPIAddr + "login",
 		{
 			method: "POST",
@@ -49,7 +51,24 @@ export async function LogIn({ eMail, password }) {
 	return result;
 }
 
-export async function UpdateUserData({ id, name, surname, phoneNumber, town }) {
+export async function getUserData({ id }) {
+	const response = await fetch(userDataAPIAddr + id,
+		{
+			method: "GET",
+			headers: { "content-type": "application/json" }
+		});
+
+	const data = await response.json();
+
+	const result = {
+		status: response.status,
+		data: data
+	};
+
+	return result;
+}
+
+export async function updateUserData({ id, name, surname, phoneNumber, town }) {
 	const response = await fetch(userDataAPIAddr + id,
 		{
 			method: "PATCH",
@@ -59,6 +78,202 @@ export async function UpdateUserData({ id, name, surname, phoneNumber, town }) {
 					surname: surname,
 					phoneNumber: phoneNumber,
 					town: town
+				}),
+			headers: { "content-type": "application/json" }
+		});
+
+	const data = await response.json();
+
+	const result = {
+		status: response.status,
+		data: data
+	};
+
+	return result;
+}
+
+export async function addNewAd({ userId, title, description, price }) {
+	const response = await fetch(adDataAPIAddr,
+		{
+			method: "POST",
+			body: JSON.stringify(
+				{
+					userId: userId,
+					title: title,
+					description: description,
+					price: price
+				}),
+			headers: { "content-type": "application/json" }
+		});
+
+	const data = await response.json();
+
+	const result = {
+		status: response.status,
+		data: data
+	};
+
+	return result;
+}
+
+export async function updateAd({ id, title, description, price }) {
+	const response = await fetch(adDataAPIAddr + id,
+		{
+			method: "PATCH",
+			body: JSON.stringify(
+				{
+					title: title,
+					description: description,
+					price: price
+				}),
+			headers: { "content-type": "application/json" }
+		});
+
+	const data = await response.json();
+
+	const result = {
+		status: response.status,
+		data: data
+	};
+
+	return result;
+}
+
+export async function deleteAd({ id }) {
+	const response = await fetch(adDataAPIAddr + id,
+		{
+			method: "DELETE",
+			headers: { "content-type": "application/json" }
+		});
+
+	const data = await response.json();
+
+	const result = {
+		status: response.status,
+		data: data
+	};
+
+	return result;
+}
+
+export async function getAds() {
+	const response = await fetch(adDataAPIAddr,
+		{
+			method: "GET",
+			headers: { "content-type": "application/json" }
+		});
+
+	const data = await response.json();
+
+	const result = {
+		status: response.status,
+		data: data
+	};
+
+	return result;
+}
+
+export async function getAd({ id }) {
+	const response = await fetch(adDataAPIAddr + id,
+		{
+			method: "GET",
+			headers: { "content-type": "application/json" }
+		});
+
+	const data = await response.json();
+
+	const result = {
+		status: response.status,
+		data: data
+	};
+
+	return result;
+}
+
+export async function getAdsOfUser({ userId }) {
+	const response = await fetch(userDataAPIAddr + String(userId) + "/ads",
+		{
+			method: "GET",
+			headers: { "content-type": "application/json" }
+		});
+
+	const data = await response.json();
+
+	const result = {
+		status: response.status,
+		data: data
+	};
+
+	return result;
+}
+
+export async function addComment({ userId, adId, comment }) {
+	const response = await fetch(adDataAPIAddr + String(adId) + "/comments",
+		{
+			method: "POST",
+			body: JSON.stringify(
+				{
+					userId: userId,
+					comment: comment
+				}),
+			headers: { "content-type": "application/json" }
+		});
+
+	const data = await response.json();
+
+	const result = {
+		status: response.status,
+		data: data
+	};
+
+	return result;
+}
+
+export async function getComment({ id }) {
+	const response = await fetch(commentDataAPIAddr + String(id),
+		{
+			method: "GET",
+			headers: { "content-type": "application/json" }
+		});
+
+	const data = await response.json();
+
+	const result = {
+		status: response.status,
+		data: data
+	};
+
+	return result;
+}
+
+export async function updateComment({ id, comment }) {
+	const response = await fetch(commentDataAPIAddr + String(id),
+		{
+			method: "PATCH",
+			body: JSON.stringify(
+				{
+					comment: comment
+				}),
+			headers: { "content-type": "application/json" }
+		});
+
+	const data = await response.json();
+
+	const result = {
+		status: response.status,
+		data: data
+	};
+
+	return result;
+}
+
+export async function deleteComment({ commentId, adId }) {
+	const response = await fetch(commentDataAPIAddr + String(commentId),
+		{
+			method: "DELETE",
+			body: JSON.stringify(
+				{
+					adId: adId
 				}),
 			headers: { "content-type": "application/json" }
 		});

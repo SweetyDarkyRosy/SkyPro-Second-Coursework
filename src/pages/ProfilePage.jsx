@@ -9,6 +9,8 @@ import { useAuthContext } from "../authContext";
 import { AdvertisementList } from "../components/Advertisement";
 import ProfileInfoBlockPrivate from "../components/ProfileInfoBlockPrivate";
 import ProfileInfoBlockPublic from "../components/ProfileInfoBlockPublic";
+import { getAdsOfUser, getUserData } from "../api";
+import { useNotificationContext } from "../notificationContext";
 
 
 const WelcomeText = styled.h2`
@@ -24,25 +26,62 @@ const WelcomeText = styled.h2`
 
 export default function ProfilePage() {
 	const authContext = useAuthContext();
+	const notificationContext = useNotificationContext();
 	const pageParams = useParams();
 	const navigate = useNavigate();
 
 	const [ isOwnProfile, setIfOwnProfile ] = useState(null);
+	const [adList, setAdList] = useState([]);
 
+
+	const updateAdList = (userId) => {
+		getAdsOfUser({ userId: userId }).then((result) => {
+				const adListProcessed = [];
+
+				result.data.forEach((srcAdData) => {
+						const adData = {
+							id: srcAdData._id,
+							authorId: srcAdData.author,
+							title: srcAdData.title,
+							description: srcAdData.description,
+							created: srcAdData.created,
+							price: srcAdData.price,
+							images: srcAdData.images,
+						}
+
+						adListProcessed.push(adData);
+					});
+
+				setAdList(adListProcessed);
+			});
+	}
 
 	const setProfileState = () => {
 		if (pageParams.id !== undefined)
 		{
 			if (authContext.userData != null)
 			{
-				if (authContext.userData.userKey === Number(pageParams.id))
+				if (authContext.userData.id === pageParams.id)
 				{
 					setIfOwnProfile(true);
+					updateAdList(authContext.userData.id);
+		
 					return;
 				}
 			}
-
-			setIfOwnProfile(false);
+		
+			getUserData({ id: pageParams.id }).then((result) => {
+					if (result.status === 200)
+					{
+						setIfOwnProfile(false);
+						updateAdList(pageParams.id);
+					}
+					else
+					{
+						notificationContext.addNotificationError(result.data.error);
+						navigate("/*", { replace: true });
+					}
+				});
 		}
 		else
 		{
@@ -53,6 +92,7 @@ export default function ProfilePage() {
 			else
 			{
 				setIfOwnProfile(true);
+				updateAdList(authContext.userData.id);
 			}
 		}
 	}
@@ -62,7 +102,11 @@ export default function ProfilePage() {
 			document.body.style.backgroundColor = "#FFFFFF";
 
 			setProfileState();
-		});
+		}, []);
+
+	useEffect(() => {
+			setProfileState();
+		}, [pageParams]);
 
 
 	return (
@@ -86,7 +130,7 @@ export default function ProfilePage() {
 							(
 								(isOwnProfile === true) ?
 									<ProfileInfoBlockPrivate/> :
-									<ProfileInfoBlockPublic/>)
+									<ProfileInfoBlockPublic userId={ pageParams.id }/>)
 					}
 				</SectionDefault>
 				<SectionDefault>
@@ -99,7 +143,7 @@ export default function ProfilePage() {
 									<SectionNameSmall>Товары продавца</SectionNameSmall>)
 					}
 					
-					<AdvertisementList/>
+					<AdvertisementList adList={ adList }/>
 				</SectionDefault>
 			</Centered>
 		</React.Fragment>);

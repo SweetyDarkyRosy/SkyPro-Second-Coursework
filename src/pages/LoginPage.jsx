@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ButtonDefaultColoured, ButtonDefaultTransparent } from "../components/Button";
 import { InputMinimal } from "../components/Input";
 import { useAuthContext } from "../authContext";
-import { LogIn } from "../api";
+import { logIn } from "../api";
 import { useNotificationContext } from "../notificationContext";
 
 
@@ -49,7 +49,7 @@ export default function LoginPage() {
 			return;
 		}
 
-		LogIn({ eMail: eMailInputRef.current.value, password: passwordInputRef.current.value }).then((result) => {
+		logIn({ eMail: eMailInputRef.current.value, password: passwordInputRef.current.value }).then((result) => {
 				if (result.status === 201)
 				{
 					authContext.setUserData(result.data.body);

@@ -3,6 +3,9 @@ const mongoose = require('mongoose');
 const cors = require('./middlewares/cors');
 const userRouter = require('./routes/user');
 const User = require('./model/user');
+const adRouter = require('./routes/advertisement');
+const Advertisement = require('./model/advertisement');
+const commentRouter = require('./routes/comment');
 
 
 const app = express();
@@ -18,11 +21,14 @@ app.get('/', (request, response) => {
 })
 
 app.use(userRouter);
+app.use(adRouter);
+app.use(commentRouter);
 
 
 try {
 	mongoose.connect('mongodb://127.0.0.1:27017/adDatabase').then(() => {
 			User.init();
+			Advertisement.init();
 
 			console.log('Успешное подключение к базе данных');
 		});

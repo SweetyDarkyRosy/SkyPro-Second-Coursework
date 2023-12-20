@@ -82,7 +82,7 @@ export const TextBoxDefault = styled.textarea`
 	box-sizing: border-box;
 
 	border-radius: 6px;
-	border: solid 1px #00000033;
+	border: ${ props => (props.isErrorMarked ? 'solid 1px #9E0000': 'solid 1px #00000033') };
 
 	font-weight: 400;
 	font-size: 16px;
@@ -91,7 +91,7 @@ export const TextBoxDefault = styled.textarea`
 	resize: none;
 
 	&:focus {
-		border: solid 1px #009EE4;
+		border: ${ props => (props.isErrorMarked ? 'solid 1px #9E0000': 'solid 1px #009EE4') };
 		outline: none;
 	}
 `;

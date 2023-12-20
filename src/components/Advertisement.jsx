@@ -1,5 +1,8 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { getUserData } from "../api";
+import { useNotificationContext } from "../notificationContext";
 
 
 const AdvertisementListBase = styled.div`
@@ -72,28 +75,86 @@ const AdvertisementSecondaryInfoText = styled.p`
 `;
 
 
-function Advertisement({ adId }) {
+function Advertisement({ adData }) {
+	const notificationContext = useNotificationContext();
+
+	const [ town, setTown ] = useState("");
+	const [ creationDateAndTime, setCreationDateAndTime ] = useState("");
+
+
+	const getAndSetTownInfo = () => {
+		getUserData({ id: adData.authorId }).then((result) => {
+				if (result.status === 200)
+				{
+					setTown(result.data.town);
+				}
+				else
+				{
+					notificationContext.addNotificationError(result.data.error);
+				}
+			});
+	}
+
+	const formatDateAndTime = () => {
+		const createdTimeAndDate = new Date(adData.created);
+		const createdDate = createdTimeAndDate.getDate();
+
+		const currTimeAndDate = new Date();
+
+		const dayDelta = currTimeAndDate.getDate() - createdDate;
+		const monthDelta = currTimeAndDate.getMonth() - createdTimeAndDate.getMonth();
+		const yearDelta = currTimeAndDate.getFullYear() - createdTimeAndDate.getFullYear();
+
+		let dateAndTimeText;
+
+		if ((dayDelta === 0) && (monthDelta === 0) && (yearDelta === 0))
+		{
+			dateAndTimeText = "Сегодня";
+		}
+		else if ((dayDelta === 1) && (monthDelta === 0) && (yearDelta === 0))
+		{
+			dateAndTimeText = "Вчера";
+		}
+		else
+		{
+			dateAndTimeText = (String(createdTimeAndDate.getDate()).padStart(2, "0") + '.' +
+				String(createdTimeAndDate.getMonth() + 1).padStart(2, "0") + '.' +
+				String(createdTimeAndDate.getFullYear())).padStart(2, "0");
+		}
+
+		dateAndTimeText += ', ';
+		dateAndTimeText += String(createdTimeAndDate.getHours()).padStart(2, "0") + ':' +
+			String(createdTimeAndDate.getMinutes()).padStart(2, "0") + ':' +
+			String(createdTimeAndDate.getSeconds()).padStart(2, "0");
+
+		setCreationDateAndTime(dateAndTimeText);
+	}
+
+	useEffect(() => {
+			getAndSetTownInfo();
+			formatDateAndTime();
+		}, [])
+
+
 	return (
 		<AdvertisementBase>
 			<AdvertisementPreviewImg src="/img.img"/>
-			<AdvertisementName to={ '/ad/' + adId }>Наименование данного товара</AdvertisementName>
-			<AdvertisementPriceText>2 200 ₽</AdvertisementPriceText>
+			<AdvertisementName to={ '/ad/' + adData.id }>{ adData.title }</AdvertisementName>
+			<AdvertisementPriceText>{ String(adData.price).replace(/\B(?=(\d{3})+(?!\d))/g, " ") } ₽</AdvertisementPriceText>
 			<AdvertisementSecondaryInfoBlock>
-				<AdvertisementSecondaryInfoText>Санкт-Петербург</AdvertisementSecondaryInfoText>
-				<AdvertisementSecondaryInfoText>Сегодня в 10:45</AdvertisementSecondaryInfoText>
+				<AdvertisementSecondaryInfoText>{ town }</AdvertisementSecondaryInfoText>
+				<AdvertisementSecondaryInfoText>{ creationDateAndTime }</AdvertisementSecondaryInfoText>
 			</AdvertisementSecondaryInfoBlock>
 		</AdvertisementBase>);
 }
 
-export function AdvertisementList() {
+export function AdvertisementList({ adList }) {
 	return (
 		<AdvertisementListBase>
-			<Advertisement adId={ 1 }/>
-			<Advertisement adId={ 1 }/>
-			<Advertisement adId={ 1 }/>
-			<Advertisement adId={ 1 }/>
-			<Advertisement adId={ 1 }/>
-			<Advertisement adId={ 1 }/>
-			<Advertisement adId={ 1 }/>
+			{
+				adList.map((ad) => {
+						return (<Advertisement adData={ ad }/>);
+					})
+			}
 		</AdvertisementListBase>);
 }

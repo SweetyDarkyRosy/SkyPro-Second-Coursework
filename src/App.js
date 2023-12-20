@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
+import styled from "styled-components";
 import { AppRoutes } from "./routes";
 import { AuthProvider } from "./authContext";
 import { NotificationProvider } from "./notificationContext";
-import styled from "styled-components";
 
 
 const Wrapper = styled.div`

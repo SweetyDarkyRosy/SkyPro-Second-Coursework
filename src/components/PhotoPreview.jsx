@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 
 
@@ -14,6 +14,37 @@ export const PhotoPreviewList = styled.div`
 const PhotoPreviewBase = styled.div`
 	width: 90px;
 	height: 90px;
+
+	position: relative;
+
+	stroke: #D9D9D9;
+
+	&:hover {
+		stroke: #009EE4;
+	}
+`;
+
+const PhotoPreviewInput = styled.input`
+	width: 90px;
+	height: 90px;
+
+	position: absolute;
+	left: 0;
+	top: 0;
+
+	color: transparent;
+
+	&::file-selector-button {
+		width: 90px;
+		height: 90px;
+
+		background-color: transparent;
+		border: none;
+
+		color: transparent;
+	}
+
+	cursor: pointer;
 `;
 
 const PhotoPreviewImg = styled.img`
@@ -30,12 +61,6 @@ const PhotoPreviewDynamicInnerDiv = styled.div`
 	align-items: center;
 
 	background-color: #F0F0F0;
-
-	cursor: pointer;
-
-	&:hover {
-		stroke: #009EE4;
-	}
 `;
 
 const PhotoPreviewDynamicCrossImg = styled.svg`
@@ -43,8 +68,6 @@ const PhotoPreviewDynamicCrossImg = styled.svg`
 	height: 46px;
 
 	rotate: 45deg;
-
-	stroke: #D9D9D9;
 `;
 
 const PhotoPreviewStaticInnerDiv = styled.div`
@@ -62,12 +85,18 @@ const PhotoPreviewStaticInnerDiv = styled.div`
 
 
 export function PhotoPreviewDynamic({ photoUrl }) {
+	const [ imageData, setImageData ] = useState(null);
+
+	const onImageUpload = (event) => {
+		setImageData(event.target.files[0]);
+	}
+
 	return (
 		<PhotoPreviewBase>
 			{
-				((photoUrl != undefined) && (photoUrl === "")) ?
+				(imageData != null) ?
 					(
-						<PhotoPreviewImg src="photoUrl"/>) :
+						<PhotoPreviewImg src={ URL.createObjectURL(imageData) }/>) :
 					(
 						<PhotoPreviewDynamicInnerDiv>
 							<PhotoPreviewDynamicCrossImg>
@@ -76,6 +105,7 @@ export function PhotoPreviewDynamic({ photoUrl }) {
 						</PhotoPreviewDynamicInnerDiv>
 					)
 			}
+			<PhotoPreviewInput type="file" onChange={ onImageUpload }/>
 		</PhotoPreviewBase>)
 }
 
