@@ -114,6 +114,12 @@ export function Header() {
 	const [ isAccoutMenuRolledOut, toggleAccoutMenuVisibility ] = useState(false);
 	const [ isAddAdDialogWndVisible, toggleAddAdDialogWndVisibility ] = useState(false);
 
+	const [ imageOneData, setImageOneData ] = useState(null);
+	const [ imageTwoData, setImageTwoData ] = useState(null);
+	const [ imageThreeData, setImageThreeData ] = useState(null);
+	const [ imageFourData, setImageFourData ] = useState(null);
+	const [ imageFiveData, setImageFiveData ] = useState(null);
+
 	const adTitleInputRef = useRef(null);
 	const adDescriptionInputRef = useRef(null);
 	const adPriceInputRef = useRef(null);
@@ -140,6 +146,12 @@ export function Header() {
 
 		setAdTitleInputErrorMarkedState(false);
 		setAdPriceInputErrorMarkedState(false);
+
+		setImageOneData(null);
+		setImageTwoData(null);
+		setImageThreeData(null);
+		setImageFourData(null);
+		setImageFiveData(null);
 	};
 
 	const onAdTitleInputInput = () => {
@@ -172,8 +184,35 @@ export function Header() {
 			return;
 		}
 
+		const imageArr = [];
+
+		if (imageOneData != null)
+		{
+			imageArr.push(imageOneData);
+		}
+
+		if (imageTwoData != null)
+		{
+			imageArr.push(imageTwoData);
+		}
+
+		if (imageThreeData != null)
+		{
+			imageArr.push(imageThreeData);
+		}
+
+		if (imageFourData != null)
+		{
+			imageArr.push(imageFourData);
+		}
+
+		if (imageFiveData != null)
+		{
+			imageArr.push(imageFiveData);
+		}
+
 		addNewAd({ userId: authContext.userData.id, title: adTitleInputRef.current.value, description: adDescriptionInputRef.current.value,
-			price: adPriceInputRef.current.value }).then((result) => {
+			price: adPriceInputRef.current.value, images: imageArr }).then((result) => {
 					if (result.status === 201)
 					{
 						notificationContext.addNotification("Объявление было добавлено");
@@ -247,11 +286,11 @@ export function Header() {
 									<SpanSecondaryText>не более 5 фотографий</SpanSecondaryText>
 								</PhotoBlockHeaderSpan>
 								<PhotoPreviewList>
-									<PhotoPreviewDynamic/>
-									<PhotoPreviewDynamic/>
-									<PhotoPreviewDynamic/>
-									<PhotoPreviewDynamic/>
-									<PhotoPreviewDynamic/>
+									<PhotoPreviewDynamic imageData={ imageOneData } setImageDataFunc={ setImageOneData } />
+									<PhotoPreviewDynamic imageData={ imageTwoData } setImageDataFunc={ setImageTwoData } />
+									<PhotoPreviewDynamic imageData={ imageThreeData } setImageDataFunc={ setImageThreeData } />
+									<PhotoPreviewDynamic imageData={ imageFourData } setImageDataFunc={ setImageFourData } />
+									<PhotoPreviewDynamic imageData={ imageFiveData } setImageDataFunc={ setImageFiveData } />
 								</PhotoPreviewList>
 								
 								<DialogWindowRegularText style={ { marginTop: "30px" } }>Цена</DialogWindowRegularText>

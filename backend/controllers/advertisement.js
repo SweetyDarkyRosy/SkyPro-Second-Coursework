@@ -1,4 +1,7 @@
 const Joi = require("joi");
+const path = require('path');
+const fs = require('fs');
+
 const Advertisement = require("../model/advertisement");
 const User = require("../model/user");
 const Comment = require("../model/comment");
@@ -14,7 +17,8 @@ const publishAdBody = Joi.object({
 const updateAdBody = Joi.object({
 		title: Joi.string().required(),
 		description: Joi.string().required(),
-		price: Joi.string().required()
+		price: Joi.string().required(),
+		imagePosChangedArr: Joi.array().optional()
 	}).options({ allowUnknown: false });
 
 const publishCommentBody = Joi.object({
@@ -39,8 +43,17 @@ const publishAd = async (request, response) => {
 
 		const creationDateAndTime = new Date();
 
+		console.log(request.files);
+
+		const imageList = [];
+		for (let i = 0; i < request.files.length; i++)
+		{
+			const fileName = request.files[i]["filename"];
+			imageList.push(fileName);
+		}
+
 		const ad = new Advertisement({ title: request.body.title, description: request.body.description,
-			price: request.body.price, created: creationDateAndTime, comments: [], images: [], author: user });
+			price: request.body.price, created: creationDateAndTime, comments: [], images: imageList, author: user });
 
 		user.ads.push(ad);
 
@@ -69,6 +82,27 @@ const updateAd = async (request, response) => {
 		if (!foundAd)
 		{
 			return response.status(402).json({ error: 'Объявление не было найдено' });
+		}
+
+		if (request.body.imagePosChangedArr)
+		{
+			for (let i = 0; i < request.body.imagePosChangedArr.length; i++)
+			{
+				const fileName = request.files[i]["filename"];
+				const pos = Number(request.body.imagePosChangedArr[0]);
+
+				if (pos < foundAd.images.length)
+				{
+					const oldImagePath = path.join(__dirname, '../uploads', foundAd.images[pos]);
+					fs.unlinkSync(oldImagePath);
+
+					foundAd.images[pos] = fileName;
+				}
+				else
+				{
+					foundAd.images.push(fileName);
+				}
+			}
 		}
 
 		foundAd.title = request.body.title;
@@ -133,6 +167,12 @@ const deleteAd = async (request, response) => {
 			{
 				await Comment.findByIdAndDelete(foundAd.comments[it].toString());
 			}
+		}
+
+		for (let it = 0; it < foundAd.images.length; it++)
+		{
+			const imagePath = path.join(__dirname, '../uploads', foundAd.images[it]);
+			fs.unlinkSync(imagePath);
 		}
 
 		await Advertisement.findByIdAndDelete(id);

@@ -50,9 +50,11 @@ const PhotoPreviewInput = styled.input`
 const PhotoPreviewImg = styled.img`
 	width: 100%;
 	height: 100%;
+
+	cursor: pointer;
 `;
 
-const PhotoPreviewDynamicInnerDiv = styled.div`
+const PhotoPreviewEmptyBlock = styled.div`
 	width: 100%;
 	height: 100%;
 
@@ -70,25 +72,10 @@ const PhotoPreviewDynamicCrossImg = styled.svg`
 	rotate: 45deg;
 `;
 
-const PhotoPreviewStaticInnerDiv = styled.div`
-	width: 100%;
-	height: 100%;
 
-	display: flex;
-	justify-content: center;
-	align-items: center;
-
-	background-color: #F0F0F0;
-
-	cursor: pointer;
-`;
-
-
-export function PhotoPreviewDynamic({ photoUrl }) {
-	const [ imageData, setImageData ] = useState(null);
-
+export function PhotoPreviewDynamic({ imageData, setImageDataFunc, initImageUrl }) {
 	const onImageUpload = (event) => {
-		setImageData(event.target.files[0]);
+		setImageDataFunc(event.target.files[0]);
 	}
 
 	return (
@@ -98,24 +85,27 @@ export function PhotoPreviewDynamic({ photoUrl }) {
 					(
 						<PhotoPreviewImg src={ URL.createObjectURL(imageData) }/>) :
 					(
-						<PhotoPreviewDynamicInnerDiv>
-							<PhotoPreviewDynamicCrossImg>
-								<use xlinkHref="/img/cross.svg#cross"/>
-							</PhotoPreviewDynamicCrossImg>
-						</PhotoPreviewDynamicInnerDiv>
+						((initImageUrl !== "") && (initImageUrl !== undefined)) ?
+							(<PhotoPreviewImg src={ initImageUrl }/>) :
+							(
+								<PhotoPreviewEmptyBlock>
+									<PhotoPreviewDynamicCrossImg>
+										<use xlinkHref="/img/cross.svg#cross"/>
+									</PhotoPreviewDynamicCrossImg>
+								</PhotoPreviewEmptyBlock>)
 					)
 			}
 			<PhotoPreviewInput type="file" onChange={ onImageUpload }/>
 		</PhotoPreviewBase>)
 }
 
-export function PhotoPreviewStatic({ photoUrl }) {
+export function PhotoPreviewStatic({ imageUrl, onClick, imageId }) {
 	return (
 		<PhotoPreviewBase>
 			{
-				((photoUrl != undefined) && (photoUrl === "")) ?
-					<PhotoPreviewImg src="photoUrl"/> :
-					<PhotoPreviewStaticInnerDiv/>
+				(imageUrl !== "") ?
+					<PhotoPreviewImg src={ imageUrl } onClick={ onClick } imageId={ imageId }/> :
+					<PhotoPreviewEmptyBlock/>
 			}
 		</PhotoPreviewBase>)
 }

@@ -23,7 +23,7 @@ const AdSchema = new mongoose.Schema({
 	},
 
 	images: [{
-		type: Buffer,
+		type: String,
 		required: true
 	}],
 

@@ -92,18 +92,22 @@ export async function updateUserData({ id, name, surname, phoneNumber, town }) {
 	return result;
 }
 
-export async function addNewAd({ userId, title, description, price }) {
+export async function addNewAd({ userId, title, description, price, images }) {
+	const formData = new FormData();
+	formData.append("userId", userId);
+	formData.append("title", title);
+	formData.append("description", description);
+	formData.append("price", price);
+
+	for (let i = 0; i < images.length; i++)
+	{
+		formData.append('images', images[i]);
+	}
+
 	const response = await fetch(adDataAPIAddr,
 		{
 			method: "POST",
-			body: JSON.stringify(
-				{
-					userId: userId,
-					title: title,
-					description: description,
-					price: price
-				}),
-			headers: { "content-type": "application/json" }
+			body: formData
 		});
 
 	const data = await response.json();
@@ -116,17 +120,26 @@ export async function addNewAd({ userId, title, description, price }) {
 	return result;
 }
 
-export async function updateAd({ id, title, description, price }) {
+export async function updateAd({ id, title, description, price, images, imagePosChangedArr }) {
+	const formData = new FormData();
+	formData.append("title", title);
+	formData.append("description", description);
+	formData.append("price", price);
+
+	for (let i = 0; i < imagePosChangedArr.length; i++)
+	{
+		formData.append('imagePosChangedArr[]', imagePosChangedArr[i]);
+	}
+
+	for (let i = 0; i < images.length; i++)
+	{
+		formData.append('images', images[i]);
+	}
+
 	const response = await fetch(adDataAPIAddr + id,
 		{
 			method: "PATCH",
-			body: JSON.stringify(
-				{
-					title: title,
-					description: description,
-					price: price
-				}),
-			headers: { "content-type": "application/json" }
+			body: formData
 		});
 
 	const data = await response.json();

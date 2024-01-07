@@ -5,6 +5,9 @@ import { getUserData } from "../api";
 import { useNotificationContext } from "../notificationContext";
 
 
+const imageDataAPIAddr = "http://127.0.0.1:3005/images/";
+
+
 const AdvertisementListBase = styled.div`
 	margin-top: 10px;
 
@@ -21,13 +24,20 @@ const AdvertisementListBase = styled.div`
 const AdvertisementBase = styled.div`
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+	justify-content: flex-start;
 	align-items: flex-start;
 	gap: 10px
 `;
 
+const AdvertisementPreviewEmptyBlock = styled.div`
+	width: 270px;
+	height: 270px;
+
+	background-color: #F0F0F0;
+`;
+
 const AdvertisementPreviewImg = styled.img`
-	max-width: fit-content;
+	width: 270px;
 	height: 270px;
 `;
 
@@ -131,6 +141,8 @@ function Advertisement({ adData }) {
 	}
 
 	useEffect(() => {
+			console.log(adData);
+
 			getAndSetTownInfo();
 			formatDateAndTime();
 		}, [])
@@ -138,7 +150,11 @@ function Advertisement({ adData }) {
 
 	return (
 		<AdvertisementBase>
-			<AdvertisementPreviewImg src="/img.img"/>
+			{
+				(adData.images.length === 0) ?
+					<AdvertisementPreviewEmptyBlock/> :
+					<AdvertisementPreviewImg src={ imageDataAPIAddr + adData.images[0] }/>
+			}
 			<AdvertisementName to={ '/ad/' + adData.id }>{ adData.title }</AdvertisementName>
 			<AdvertisementPriceText>{ String(adData.price).replace(/\B(?=(\d{3})+(?!\d))/g, " ") } ₽</AdvertisementPriceText>
 			<AdvertisementSecondaryInfoBlock>

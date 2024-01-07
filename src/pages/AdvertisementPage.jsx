@@ -18,6 +18,9 @@ import { useAuthContext } from "../authContext";
 import { Review } from "../components/Review";
 
 
+const imageDataAPIAddr = "http://127.0.0.1:3005/images/";
+
+
 const RegularText = styled.p`
 	color: #000000;
 	font-weight: 400;
@@ -224,6 +227,9 @@ export default function AdvertisementPage() {
 	const [ adData, setAdData ] = useState(null);
 	const [ authorData, setAuthorData] = useState(null);
 
+	const [ imageURLs, setImageURLs ] = useState([ "", "", "", "", "" ]);
+	const [ currImageId, setCurrImageId ] = useState(0);
+
 	const [ adCreationDateAndTime, setAdCreationDateAndTime ] = useState("");
 	const [ authorAccountCreationDateAndTime, setAuthorAccountCreationDateAndTime ] = useState("");
 
@@ -238,11 +244,21 @@ export default function AdvertisementPage() {
 	const adDescriptionInputRef = useRef(null);
 	const adPriceInputRef = useRef(null);
 
+	const [ imageOneData, setImageOneData ] = useState(null);
+	const [ imageTwoData, setImageTwoData ] = useState(null);
+	const [ imageThreeData, setImageThreeData ] = useState(null);
+	const [ imageFourData, setImageFourData ] = useState(null);
+	const [ imageFiveData, setImageFiveData ] = useState(null);
+
 	const [ isEditingDialogWndVisible, setEditingDialogWndVisibility ] = useState(false);
 
 	const [ isAdTitleInputErrorMarked, setAdTitleInputErrorMarkedState ] = useState(false);
 	const [ isAdPriceInputErrorMarked, setAdPriceInputErrorMarkedState ] = useState(false);
 	
+
+	const onPhotoPreviewClick = (event) => {
+		setCurrImageId(event.currentTarget.getAttribute("imageId"));
+	}
 	
 	const onShowPhoneWindowClick = () => {
 		toggleWndWithPhoneVisibility(true);
@@ -316,6 +332,12 @@ export default function AdvertisementPage() {
 
 		setAdTitleInputErrorMarkedState(false);
 		setAdPriceInputErrorMarkedState(false);
+
+		setImageOneData(null);
+		setImageTwoData(null);
+		setImageThreeData(null);
+		setImageFourData(null);
+		setImageFiveData(null);
 	}
 
 	const onAdTitleInputInput = () => {
@@ -348,8 +370,41 @@ export default function AdvertisementPage() {
 			return;
 		}
 
+		const newImageArr = [];
+		const imagePosChangedArr = [];
+
+		if (imageOneData != null)
+		{
+			newImageArr.push(imageOneData);
+			imagePosChangedArr.push(0);
+		}
+
+		if (imageTwoData != null)
+		{
+			newImageArr.push(imageTwoData);
+			imagePosChangedArr.push(1);
+		}
+
+		if (imageThreeData != null)
+		{
+			newImageArr.push(imageThreeData);
+			imagePosChangedArr.push(2);
+		}
+
+		if (imageFourData != null)
+		{
+			newImageArr.push(imageFourData);
+			imagePosChangedArr.push(3);
+		}
+
+		if (imageFiveData != null)
+		{
+			newImageArr.push(imageFiveData);
+			imagePosChangedArr.push(4);
+		}
+
 		updateAd({ id: pageParams.id, title: adTitleInputRef.current.value, description: adDescriptionInputRef.current.value,
-			price: adPriceInputRef.current.value }).then((result) => {
+			price: adPriceInputRef.current.value, images: newImageArr, imagePosChangedArr: imagePosChangedArr }).then((result) => {
 					if (result.status === 201)
 					{
 						notificationContext.addNotification("Объявление было обновлено");
@@ -419,6 +474,18 @@ export default function AdvertisementPage() {
 				{
 					setAdData(result.data.body);
 
+
+					// ----- Setting image URLs -----
+					
+					const imageURLArr = [ "", "", "", "", "" ];
+					for (let i = 0; i < result.data.body.images.length; i++)
+					{
+						imageURLArr[i] = imageDataAPIAddr + result.data.body.images[i];
+					}
+
+					setImageURLs(imageURLArr);
+
+
 					getUserData({ id: result.data.body.author }).then((result) => {
 							if (result.status === 200)
 							{
@@ -480,13 +547,13 @@ export default function AdvertisementPage() {
 								<Skeleton variant="rectangular" width={ "300px" } height={ "300px" }/> :
 								(
 									<AdPhotoBlock>
-										<AdPhoto style={ { height: "400px" } }/>
+										<AdPhoto src={ imageURLs[currImageId] } style={ { height: "400px" } }/>
 										<PhotoPreviewList>
-											<PhotoPreviewStatic/>
-											<PhotoPreviewStatic/>
-											<PhotoPreviewStatic/>
-											<PhotoPreviewStatic/>
-											<PhotoPreviewStatic/>
+											<PhotoPreviewStatic imageId={ 0 } imageUrl={ imageURLs[0] } onClick={ onPhotoPreviewClick }/>
+											<PhotoPreviewStatic imageId={ 1 } imageUrl={ imageURLs[1] } onClick={ onPhotoPreviewClick }/>
+											<PhotoPreviewStatic imageId={ 2 } imageUrl={ imageURLs[2] } onClick={ onPhotoPreviewClick }/>
+											<PhotoPreviewStatic imageId={ 3 } imageUrl={ imageURLs[3] } onClick={ onPhotoPreviewClick }/>
+											<PhotoPreviewStatic imageId={ 4 } imageUrl={ imageURLs[4] } onClick={ onPhotoPreviewClick }/>
 										</PhotoPreviewList>
 									</AdPhotoBlock>)
 						}
@@ -600,11 +667,11 @@ export default function AdvertisementPage() {
 									<SpanSecondaryText>не более 5 фотографий</SpanSecondaryText>
 								</PhotoBlockHeaderSpan>
 								<PhotoPreviewList>
-									<PhotoPreviewDynamic/>
-									<PhotoPreviewDynamic/>
-									<PhotoPreviewDynamic/>
-									<PhotoPreviewDynamic/>
-									<PhotoPreviewDynamic/>
+									<PhotoPreviewDynamic imageData={ imageOneData } setImageDataFunc={ setImageOneData } initImageUrl={ imageURLs[0] }/>
+									<PhotoPreviewDynamic imageData={ imageTwoData } setImageDataFunc={ setImageTwoData } initImageUrl={ imageURLs[1] }/>
+									<PhotoPreviewDynamic imageData={ imageThreeData } setImageDataFunc={ setImageThreeData } initImageUrl={ imageURLs[2] }/>
+									<PhotoPreviewDynamic imageData={ imageFourData } setImageDataFunc={ setImageFourData } initImageUrl={ imageURLs[3] }/>
+									<PhotoPreviewDynamic imageData={ imageFiveData } setImageDataFunc={ setImageFiveData } initImageUrl={ imageURLs[4] }/>
 								</PhotoPreviewList>
 								
 								<DialogWindowRegularText style={ { marginTop: "30px" } }>Цена</DialogWindowRegularText>
