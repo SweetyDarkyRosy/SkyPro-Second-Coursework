@@ -1,0 +1,11 @@
+db.getCollection("users").getIndexes()
+db.getCollection("users").dropIndexes()
+db.getCollection("users").getIndexes()
+db.getCollection("users").dropIndexes()
+db.getCollection("users").getIndexes()
+use adDatabase
+db.getCollection("users").getIndexes()
+ds.getCollection("users").getIndexes()
+adDatabase.getCollection("users").getIndexes()
+db.getCollection("adDatabase").getIndexes()
+db.getCollection("users").getIndexes()
